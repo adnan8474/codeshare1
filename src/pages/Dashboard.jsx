@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import UploadForm from '../components/UploadForm';
 import ResultsTable from '../components/ResultsTable';
 import ChartPanel from '../components/ChartPanel';
@@ -6,6 +6,7 @@ import SidebarFilters from '../components/SidebarFilters';
 import { analyzeData } from '../utils/dataAnalysis';
 import SummaryPanel from '../components/SummaryPanel';
 import RulesBuilder from '../components/RulesBuilder';
+import SuspiciousTable from '../components/SuspiciousTable';
 import { defaultConfig } from '../utils/anomalyUtils';
 
 // TODO: allow exporting filtered dataset as CSV
@@ -24,12 +25,17 @@ export default function Dashboard() {
   const [config, setConfig] = useState(defaultConfig);
   const [auditOnly, setAuditOnly] = useState(false);
 
+  useEffect(() => {
+    if (rawData.length) {
+      const res = analyzeData(rawData, config);
+      setAnalysis(res);
+      setAnomalies(res.anomalies);
+    }
+  }, [config, rawData]);
+
   const handleUpload = (rows) => {
     setRawData(rows);
     setFiltered(rows);
-    const res = analyzeData(rows, config);
-    setAnalysis(res);
-    setAnomalies(res.anomalies);
   };
 
   const handleFilter = (rows) => {
@@ -80,10 +86,10 @@ export default function Dashboard() {
               </div>
             </div>
             <ResultsTable data={displayedRows} />
+            <SuspiciousTable scores={analysis?.suspicious} />
             <ChartPanel data={analysis?.chartData} />
           </>
         )}
       </div>
     </div>
   );
-}
