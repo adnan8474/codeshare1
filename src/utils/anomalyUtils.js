@@ -125,7 +125,7 @@ export function detectAnomalies(rows, cfg = {}) {
   return { fields, anomalies };
 }
 
-export function summarize(rows, anomalies, fields) {
+export function summarize(rows, anomalies, fields, scores = []) {
   const operatorCounts = {};
   const barcodeReuse = anomalies.filter((a) => a.type === 'Barcode reuse across operators').length;
   anomalies = anomalies || [];
@@ -143,6 +143,8 @@ export function summarize(rows, anomalies, fields) {
 
   const shiftViolations = anomalies.filter((a) => a.type === 'Shift violation').length;
 
+  const mostSuspicious = scores.reduce((a, b) => (a.avgScore > b.avgScore ? a : b), scores[0] || { operator: '', avgScore: 0 });
+
   return {
     totalTests: rows.length,
     uniqueOperators: operators.length,
@@ -151,6 +153,7 @@ export function summarize(rows, anomalies, fields) {
     maxConsecutive,
     shiftViolations,
     totalAnomalies: anomalies.length,
+    mostSuspiciousOperator: mostSuspicious.operator || '',
     breakdown: anomalies.reduce((acc, a) => {
       acc[a.type] = (acc[a.type] || 0) + 1;
       return acc;
