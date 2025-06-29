@@ -14,7 +14,7 @@ export default function Home() {
       <Link to="/dashboard" className="px-4 py-2 bg-soft-blue rounded hover:bg-blue-700">
         Get Started
       </Link>
-      
+      </div>
       <InstructionsDropdown />
     </div>
   );
