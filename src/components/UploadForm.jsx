@@ -1,27 +1,39 @@
 import { useRef, useState } from 'react';
-import axios from 'axios';
+import * as XLSX from 'xlsx';
 
 export default function UploadForm({ onUploadComplete }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const inputRef = useRef();
 
-  const handleFile = async (file) => {
+  const handleFile = (file) => {
     if (!file) return;
-    const formData = new FormData();
-    formData.append('file', file);
     setLoading(true);
     setError(null);
-    try {
-      const res = await axios.post('https://poctify-1.onrender.com/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      onUploadComplete && onUploadComplete(res.data);
-    } catch (err) {
-      setError('Upload failed');
-    } finally {
+    setSuccess(false);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(firstSheet, { defval: '' });
+        onUploadComplete && onUploadComplete(json);
+        setSuccess(true);
+      } catch (err) {
+        console.error(err);
+        setError('Could not parse file');
+      } finally {
+        setLoading(false);
+      }
+    };
+    reader.onerror = () => {
+      setError('File reading failed');
       setLoading(false);
-    }
+    };
+    reader.readAsArrayBuffer(file);
   };
 
   const onDrop = (e) => {
@@ -39,7 +51,10 @@ export default function UploadForm({ onUploadComplete }) {
   };
 
   const downloadTemplate = () => {
-    window.location.href = 'https://poctify-1.onrender.com/template/download';
+    const link = document.createElement('a');
+    link.href = '/template.csv';
+    link.download = 'template.csv';
+    link.click();
   };
 
   return (
@@ -70,8 +85,9 @@ export default function UploadForm({ onUploadComplete }) {
           Download Template
         </button>
       </div>
-      {loading && <p className="mt-2 text-soft-blue">Uploading...</p>}
+      {loading && <p className="mt-2 text-soft-blue">Processing...</p>}
       {error && <p className="mt-2 text-red-500">{error}</p>}
+      {success && <p className="mt-2 text-green-400">File loaded successfully</p>}
     </div>
   );
 }
