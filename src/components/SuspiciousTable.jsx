@@ -55,12 +55,13 @@ export default function SuspiciousTable({ scores = [] }) {
       <div className="overflow-x-auto">
         <table className="min-w-full text-left text-sm">
           <thead className="bg-soft-blue cursor-pointer">
-            <tr>
-              <th className="px-3 py-2" onClick={() => toggleSort('operator')}>Operator</th>
-              <th className="px-3 py-2" onClick={() => toggleSort('tests')}>Tests</th>
-              <th className="px-3 py-2" onClick={() => toggleSort('totalScore')}>Total Score</th>
-              <th className="px-3 py-2" onClick={() => toggleSort('avgScore')}>Avg/Test</th>
-            </tr>
+          <tr>
+            <th className="px-3 py-2" onClick={() => toggleSort('operator')}>Operator</th>
+            <th className="px-3 py-2" onClick={() => toggleSort('tests')}>Tests</th>
+            <th className="px-3 py-2" onClick={() => toggleSort('totalScore')}>Total Score</th>
+            <th className="px-3 py-2" onClick={() => toggleSort('avgScore')}>Avg/Test</th>
+            <th className="px-3 py-2" onClick={() => toggleSort('peakHour')}>Peak/Hour</th>
+          </tr>
           </thead>
           <tbody>
             {sorted.map((row) => (
@@ -69,6 +70,7 @@ export default function SuspiciousTable({ scores = [] }) {
                 <td className="px-3 py-1">{row.tests}</td>
                 <td className="px-3 py-1">{row.totalScore}</td>
                 <td className={`px-3 py-1 font-bold ${color(row.avgScore)}`}>{row.avgScore}</td>
+                <td className="px-3 py-1">{row.peakHour}</td>
               </tr>
             ))}
           </tbody>
