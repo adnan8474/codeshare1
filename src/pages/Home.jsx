@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '/logo.png';
+<img src="/logo.png" alt="POCTIFY" className="w-24 h-24 mb-4" />
 
 export default function Home() {
   return (
