@@ -1,0 +1,3 @@
+Timestamp,Operator ID,Device,Location,Barcode,Result
+2025-01-01T08:00:00,OP1001,Dev01,WardA,BC001,Negative
+2025-01-01T08:05:00,OP1002,Dev02,WardB,BC002,Positive
