@@ -5,5 +5,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173
+    export default {
+  build: {
+    rollupOptions: {
+      external: ['/logo.png']
+    }
+  }
+}
   }
 });
