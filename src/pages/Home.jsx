@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from '/logo.png';
+import InstructionsDropdown from '../components/InstructionsDropdown';
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Link to="/dashboard" className="px-4 py-2 bg-soft-blue rounded hover:bg-blue-700">
         Get Started
       </Link>
+      <InstructionsDropdown />
     </div>
   );
 }
