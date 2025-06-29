@@ -9,6 +9,7 @@ export default function SummaryPanel({ stats }) {
       <p>🔁 Barcode Reuse Count: {stats.barcodeReuseCount}</p>
       <p>⚡ Max Consecutive Tests: {stats.maxConsecutive}</p>
       <p>⏰ Shift Violations: {stats.shiftViolations}</p>
+      <p>🚨 Most Suspicious Operator: {stats.mostSuspiciousOperator}</p>
       <p>🚩 Total Anomalies: {stats.totalAnomalies}</p>
       <div>
         {Object.entries(stats.breakdown).map(([k, v]) => (
